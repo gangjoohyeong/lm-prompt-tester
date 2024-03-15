@@ -3,8 +3,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px 3%;
+  padding: 20px 3%;
   background-color: #000;
+  border-end-start-radius: 50px;
+  border-end-end-radius: 50px;
+  margin: 0px 50px;
 }
 
 .link,
@@ -18,7 +21,7 @@
 
 .link span {
   font-weight: 500;
-  font-size: 15px;
+  font-size: 20px;
   background-color: #000;
   text-decoration: none;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -27,7 +30,7 @@
 .nav {
   display: flex;
   gap: 5px;
-  font-size: 15px;
+  font-size: 20px;
   background-color: #000;
 }
 
