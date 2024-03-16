@@ -6,7 +6,7 @@ export default function Header(): JSX.Element {
     <>
       <header className={styles.header}>
         <Link className={styles.link} to="/">
-          <span>TESTER</span>
+          LM PROMPT TESTER
         </Link>
         <nav className={styles.nav}>
           <Link className={styles.navLink} to="/">
