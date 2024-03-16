@@ -1,0 +1,40 @@
+.introContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  margin-bottom: 20vh;
+  text-align: center;
+  overflow: hidden;
+}
+
+.title {
+  font-size: 4rem;
+  margin: 0;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: slideIn 0.8s forwards;
+  animation-delay: 0.5s;
+}
+
+.description {
+  font-size: 1.3rem;
+  width: 50%;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideIn 0.8s forwards;
+  animation-delay: 1s;
+  color: #333;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
