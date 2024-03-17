@@ -8,13 +8,13 @@ Base = declarative_base()
 
 load_dotenv()
 
-USERNAME = os.getenv("USERNAME")
+USERNAME = os.getenv("MYSQL_USERNAME")
 PASSWORD = os.getenv("PASSWORD")
 HOST = os.getenv("HOST")
 PORT = os.getenv("PORT")
 DB_NAME = os.getenv("DB_NAME")
 
-DB_URL = 'mysql+pymysql://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}'
+DB_URL = f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}"
 
 class engineconn:
     def __init__ (self):
@@ -29,3 +29,12 @@ class engineconn:
         conn = self.engine.connect()
         return conn
     
+engine = create_engine(DB_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
