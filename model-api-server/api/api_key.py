@@ -23,8 +23,8 @@ def api_key_get_all(db: Session = Depends(get_db)):
         
 @router.post("/", tags=tags, response_model=ApiKeyOnly)
 def api_key_insert(api_key: ApiKeyInsert, db: Session = Depends(get_db)):
-    api_key_id = insert_api_key(db, api_key)
-    return {"key": api_key_id}
+    key = insert_api_key(db, api_key)
+    return {"key": key}
 
 
 @router.get("/{api_key_name}", tags=tags, response_model=ApiKeyOnly)

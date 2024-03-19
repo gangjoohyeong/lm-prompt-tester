@@ -16,7 +16,7 @@ def insert_api_key(db: Session, api_key: ApiKeyInsert):
     db.add(db_api_key)
     db.commit()
     
-    return db_api_key.id
+    return db_api_key.key
 
 def get_api_key(db: Session, name: str):
     db_api_key = db.query(ApiKey).filter(ApiKey.name == name).first()
