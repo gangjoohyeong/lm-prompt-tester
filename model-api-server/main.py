@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api import api_key
+from api import api_key, openai
 
 app = FastAPI()
 
@@ -8,3 +8,4 @@ async def hello():
     return {"Hello": "World"}
 
 app.include_router(api_key.router)
+app.include_router(openai.router)
