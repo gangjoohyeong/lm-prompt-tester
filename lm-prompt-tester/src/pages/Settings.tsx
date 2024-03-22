@@ -1,5 +1,11 @@
+import APISetting from "../components/APISetting";
+
 const Settings = (): JSX.Element => {
-  return <div>Settings</div>;
+  return (
+    <>
+      <APISetting />
+    </>
+  );
 };
 
 export default Settings;
