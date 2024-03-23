@@ -1,9 +1,9 @@
-import APISetting from "../components/APISetting";
+import APIContainer from "../components/APIContainer";
 
 const Settings = (): JSX.Element => {
   return (
     <>
-      <APISetting />
+      <APIContainer />
     </>
   );
 };
