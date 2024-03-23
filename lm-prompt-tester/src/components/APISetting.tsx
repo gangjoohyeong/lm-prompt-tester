@@ -1,8 +1,29 @@
 import { useEffect, useState } from "react";
 import styles from "./APISetting.module.css";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const apiUrl = import.meta.env.VITE_API_URL;
+
+async function apiUpdateCheckAlert(): Promise<boolean> {
+  const result = await Swal.fire({
+    title: "Are you sure you want to update the API key?",
+    text: "This action will remove the existing API key.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "black",
+    cancelButtonColor: "gray",
+    confirmButtonText: "Yes",
+    cancelButtonText: "No",
+    customClass: {
+      confirmButton: styles.customButton,
+      cancelButton: styles.customButton,
+      popup: styles.customPopup,
+    },
+  });
+
+  return result.isConfirmed;
+}
 
 interface APISettingProps {
   ApiName: string;
@@ -40,9 +61,9 @@ export default function APISetting({
   };
   const onSendButtonClick = async () => {
     try {
-      setIsLoading(true);
       // API Key가 비어있을 때
       if (isEditing) {
+        setIsLoading(true);
         const isExistApi = await axios.get(`${apiUrl}/api-keys/${ApiDbName}`);
 
         // DB에 해당 API key가 존재하지 않을 때
@@ -68,8 +89,10 @@ export default function APISetting({
         }
         // API가 이미 등록되어 있을 때
       } else {
-        setApiKey("");
-        setIsEditing(true);
+        if (await apiUpdateCheckAlert()) {
+          setApiKey("");
+          setIsEditing(true);
+        }
       }
     } catch (error) {
       console.error(error);
@@ -87,7 +110,7 @@ export default function APISetting({
         <h3 className={styles.loading}>Loading ...</h3>
       ) : (
         <div>
-          <div>{ApiName} API</div>
+          <div>{ApiName} API key</div>
           <div className={styles.inputContainer}>
             <input
               className={styles.inputBox}

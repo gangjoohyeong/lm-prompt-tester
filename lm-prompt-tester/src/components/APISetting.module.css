@@ -37,3 +37,12 @@
   align-items: center;
   height: 100%;
 }
+
+.customButton:focus {
+  box-shadow: 0px 0 2px black !important;
+}
+
+.customPopup {
+  height: 400px !important;
+  width: 500px !important;
+}
