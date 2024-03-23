@@ -15,10 +15,12 @@ export default function APISetting({
 }: APISettingProps): JSX.Element {
   const [apiKey, setApiKey] = useState<string>("");
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         const response = await axios.get(`${apiUrl}/api-keys/${ApiDbName}`);
         setApiKey(response.data.key);
         if (response.data.key === "") {
@@ -26,6 +28,8 @@ export default function APISetting({
         }
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchData();
@@ -36,6 +40,7 @@ export default function APISetting({
   };
   const onSendButtonClick = async () => {
     try {
+      setIsLoading(true);
       // API Key가 비어있을 때
       if (isEditing) {
         const isExistApi = await axios.get(`${apiUrl}/api-keys/${ApiDbName}`);
@@ -68,6 +73,8 @@ export default function APISetting({
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -76,20 +83,24 @@ export default function APISetting({
 
   return (
     <>
-      <div>
-        <div>{ApiName} API</div>
-        <div className={styles.inputContainer}>
-          <input
-            className={styles.inputBox}
-            value={displayedApiKey}
-            disabled={!isEditing}
-            onChange={onChangeInput}
-          ></input>
-          <button className={styles.inputButton} onClick={onSendButtonClick}>
-            {sendButtonText}
-          </button>
+      {isLoading ? (
+        <h3 className={styles.loading}>Loading ...</h3>
+      ) : (
+        <div>
+          <div>{ApiName} API</div>
+          <div className={styles.inputContainer}>
+            <input
+              className={styles.inputBox}
+              value={displayedApiKey}
+              disabled={!isEditing}
+              onChange={onChangeInput}
+            ></input>
+            <button className={styles.inputButton} onClick={onSendButtonClick}>
+              {sendButtonText}
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }
