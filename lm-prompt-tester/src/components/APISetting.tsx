@@ -71,7 +71,7 @@ export default function APISetting({
     }
   };
 
-  const sendButtonText = isEditing ? "Send" : "Edit";
+  const sendButtonText = isEditing ? "Apply" : "Update";
   const displayedApiKey = isEditing ? apiKey : "●".repeat(apiKey.length);
 
   return (

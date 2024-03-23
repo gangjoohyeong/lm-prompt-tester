@@ -1,8 +1,7 @@
 .container {
-  margin-top: 20px;
   background-color: black;
   border-radius: 30px;
   color: white;
-  margin: 30px 100px;
-  padding: 20px;
+  margin: 50px 30vh;
+  padding: 10px 30px;
 }
