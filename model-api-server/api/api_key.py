@@ -24,7 +24,10 @@ def api_key_get_all(db: Session = Depends(get_db)):
 @router.post("/", tags=tags, response_model=ApiKeyOnly)
 def api_key_insert(api_key: ApiKeyInsert, db: Session = Depends(get_db)):
     key = insert_api_key(db, api_key)
-    return {"key": key}
+    if key:
+        return {"key": key}
+    else:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Whitespace is not allowed.")
 
 
 @router.get("/{api_key_name}", tags=tags, response_model=ApiKeyOnly)
@@ -33,14 +36,14 @@ def api_key_get_by_name(api_key_name: str, db: Session = Depends(get_db)):
     if key:
         return { "key": key }
     else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="API key name not found")
+        return { "key": "" }
 
 
-@router.patch("/{api_key_name}", tags=tags, response_model=ApiKeyName)
+@router.patch("/{api_key_name}", tags=tags, response_model=ApiKeyOnly)
 def api_key_update_by_name(api_key_name: str, api_key_update: ApiKeyUpdate, db: Session = Depends(get_db)):
-    update_api_key_name = update_api_key(db, api_key_name, api_key_update)
+    update_api_key_key = update_api_key(db, api_key_name, api_key_update)
     if api_key_name:
-        return { "name": update_api_key_name }
+        return { "key": update_api_key_key }
     else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="API key name not found")
     

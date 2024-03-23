@@ -12,11 +12,13 @@ def get_all_api_keys(db: Session):
         return None
 
 def insert_api_key(db: Session, api_key: ApiKeyInsert):
-    db_api_key = ApiKey(name=api_key.name, key=api_key.key, create_date=datetime.now())
-    db.add(db_api_key)
-    db.commit()
-    
-    return db_api_key.key
+    if api_key.name and api_key.key:
+        db_api_key = ApiKey(name=api_key.name, key=api_key.key, create_date=datetime.now())
+        db.add(db_api_key)
+        db.commit()
+        return db_api_key.key
+    else:
+        return None
 
 def get_api_key(db: Session, name: str):
     db_api_key = db.query(ApiKey).filter(ApiKey.name == name).first()
@@ -27,11 +29,11 @@ def get_api_key(db: Session, name: str):
 
 def update_api_key(db: Session, api_key_name: str, api_key_update: ApiKeyUpdate):
     db_api_key = db.query(ApiKey).filter(ApiKey.name == api_key_name).first()
-    if db_api_key:
+    if db_api_key and api_key_update.new_key:
         db_api_key.key = api_key_update.new_key
         db_api_key.create_date = datetime.now()
         db.commit()
-        return db_api_key.name
+        return db_api_key.key
     else:
         return None
         
