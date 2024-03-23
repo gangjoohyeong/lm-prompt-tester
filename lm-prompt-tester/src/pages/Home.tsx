@@ -6,7 +6,7 @@ const Home = (): JSX.Element => {
       <h1 className={styles.title}>Welcome to LM Prompt Tester</h1>
       <p className={styles.description}>
         "LM Prompt Tester" is a web platform designed for testing various
-        language models such as GPT, PALM 2, Gemma, and more. Users can input
+        language models such as GPT, Claude, Gemini, and more. Users can input
         prompts and observe the generated outputs of these models for analysis
         and experimentation. It allows users to quickly assess how different
         language models respond to different prompts, facilitating better
