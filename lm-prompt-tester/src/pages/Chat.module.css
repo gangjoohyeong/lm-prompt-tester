@@ -1,15 +1,16 @@
 .createChatroomButton {
+  width: 50%;
   background-color: black;
   color: white;
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-size: 16px;
+  padding: 20px 20px;
+  border-radius: 20px;
+  font-size: 20px;
   border: none;
   cursor: pointer;
 }
 
 .createChatroomButton:hover {
-  background-color: #1f5fbe;
+  background-color: #333;
 }
 
 .chatroomContainer {

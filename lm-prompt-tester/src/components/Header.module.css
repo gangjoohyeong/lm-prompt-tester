@@ -13,7 +13,6 @@
   color: #a5c9ff;
   text-decoration: none;
   transition: color 0.3s ease;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   background-color: transparent;
   font-weight: 500;
   font-size: 20px;
@@ -38,7 +37,6 @@
 .link {
   position: relative;
   color: whitesmoke;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 20px;
   text-decoration: none;
 }
