@@ -41,3 +41,6 @@ def create_anthropic_history(db: Session, params: AnthropicHistory):
     db.add(db_history)
     db.commit()
     return db_history.id
+
+def get_all_history(db: Session):
+    return db.query(History).all()
