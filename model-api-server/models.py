@@ -17,6 +17,7 @@ class History(Base):
     model = Column(String(100), nullable=False)
     user_message = Column(Text, nullable=False)
     system_message = Column(Text, nullable=True)
+    answer = Column(Text, nullable=False)
     max_tokens = Column(Integer, nullable=True)
     top_p = Column(Float, nullable=True)
     frequency_penalty = Column(Float, nullable=True)

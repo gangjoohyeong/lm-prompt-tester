@@ -4,6 +4,7 @@ class OpenAiHistory(BaseModel):
     model: str
     system_message: str
     user_message: str
+    answer: str
     max_tokens: int
     top_p: float
     frequency_penalty: float
@@ -18,6 +19,7 @@ class AnthropicHistory(BaseModel):
     model: str
     system_message: str
     user_message: str
+    answer: str
     max_tokens: int
     top_p: float
     temperature: float
