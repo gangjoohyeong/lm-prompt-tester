@@ -3,7 +3,8 @@ import styles from "./APISetting.module.css";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const apiUrl = import.meta.env.VITE_API_URL;
+const apiIp = import.meta.env.VITE_API_IP;
+const apiPort = import.meta.env.VITE_API_PORT;
 
 async function apiUpdateCheckAlert(): Promise<boolean> {
   const result = await Swal.fire({
@@ -42,7 +43,9 @@ export default function APISetting({
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(`${apiUrl}/api-keys/${ApiDbName}`);
+        const response = await axios.get(
+          `http://${apiIp}:${apiPort}/api-keys/${ApiDbName}`
+        );
         setApiKey(response.data.key);
         if (response.data.key === "") {
           setIsEditing(true);
@@ -64,7 +67,9 @@ export default function APISetting({
       // API Key가 비어있을 때
       if (isEditing) {
         setIsLoading(true);
-        const isExistApi = await axios.get(`${apiUrl}/api-keys/${ApiDbName}`);
+        const isExistApi = await axios.get(
+          `http://${apiIp}:${apiPort}/api-keys/${ApiDbName}`
+        );
 
         // DB에 해당 API key가 존재하지 않을 때
         if (isExistApi.data.key === "") {
@@ -72,7 +77,10 @@ export default function APISetting({
             name: ApiDbName,
             key: apiKey,
           };
-          const response = await axios.post(`${apiUrl}/api-keys`, requestData);
+          const response = await axios.post(
+            `http://${apiIp}:${apiPort}/api-keys`,
+            requestData
+          );
           setApiKey(response.data.key);
           setIsEditing(false);
           // DB에 해당 API key가 존재할 때
@@ -81,7 +89,7 @@ export default function APISetting({
             new_key: apiKey,
           };
           const response = await axios.patch(
-            `${apiUrl}/api-keys/${ApiDbName}`,
+            `http://${apiIp}:${apiPort}/api-keys/${ApiDbName}`,
             requestData
           );
           setApiKey(response.data.key);
