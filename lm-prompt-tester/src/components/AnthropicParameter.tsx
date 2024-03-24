@@ -1,13 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./AnthropicParameter.module.css";
 
-export default function AnthropicParameter(): JSX.Element {
+interface updateParameterProps {
+  updateParameter: (key: string, value: unknown) => void;
+}
+
+export default function AnthropicParameter({
+  updateParameter,
+}: updateParameterProps): JSX.Element {
   const [systemMessage, setSystemMessage] = useState<string>(
     "Respond only in Yoda-speak."
   );
   const [maxTokens, setMaxTokens] = useState<number>(1024);
   const [topP, setTopP] = useState<number>(1.0);
   const [temperature, setTemperature] = useState<number>(1.0);
+
+  useEffect(() => {
+    updateParameter("system_message", systemMessage);
+    updateParameter("max_tokens", maxTokens);
+    updateParameter("top_p", topP);
+    updateParameter("temperature", temperature);
+  }, []);
 
   return (
     <div className={styles.parameterContainer}>
@@ -17,7 +30,10 @@ export default function AnthropicParameter(): JSX.Element {
           className={styles.inputTextBox}
           type="text"
           value={systemMessage}
-          onChange={(e) => setSystemMessage(e.target.value)}
+          onChange={(e) => {
+            setSystemMessage(e.target.value);
+            updateParameter("system_message", e.target.value);
+          }}
         />
       </label>
 
@@ -28,7 +44,10 @@ export default function AnthropicParameter(): JSX.Element {
           type="number"
           value={maxTokens}
           min={1}
-          onChange={(e) => setMaxTokens(Number(e.target.value))}
+          onChange={(e) => {
+            setMaxTokens(Number(e.target.value));
+            updateParameter("max_tokens", e.target.value);
+          }}
         />
       </label>
 
@@ -41,7 +60,10 @@ export default function AnthropicParameter(): JSX.Element {
           min={0.0}
           max={1.0}
           step="0.01"
-          onChange={(e) => setTopP(Number(e.target.value))}
+          onChange={(e) => {
+            setTopP(Number(e.target.value));
+            updateParameter("top_p", e.target.value);
+          }}
         />
         <span>{topP}</span>
       </label>
@@ -55,7 +77,10 @@ export default function AnthropicParameter(): JSX.Element {
           min={0.0}
           max={1.0}
           step="0.01"
-          onChange={(e) => setTemperature(Number(e.target.value))}
+          onChange={(e) => {
+            setTemperature(Number(e.target.value));
+            updateParameter("temperature", e.target.value);
+          }}
         />
         <span>{temperature}</span>
       </label>
