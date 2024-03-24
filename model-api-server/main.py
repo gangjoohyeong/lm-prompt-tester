@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api import api_key, openai, anthropic
+from api import api_key, openai, anthropic, history
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -19,3 +19,4 @@ async def hello():
 app.include_router(api_key.router)
 app.include_router(openai.router)
 app.include_router(anthropic.router)
+app.include_router(history.router)
