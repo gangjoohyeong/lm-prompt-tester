@@ -12,8 +12,18 @@ export default function Chatroom({ onClose }: ChatroomProps): JSX.Element {
     { value: "gpt-3.5-turbo", label: "GPT-3.5-Turbo", made: "OpenAI" },
     { value: "gpt-4", label: "GPT-4", made: "OpenAI" },
     {
+      value: "claude-3-opus-20240229",
+      label: "Claude-3-Opus",
+      made: "Anthropic",
+    },
+    {
       value: "claude-3-sonnet-20240229",
       label: "Claude-3-Sonnet",
+      made: "Anthropic",
+    },
+    {
+      value: "claude-3-haiku-20240307",
+      label: "Claude-3-Haiku",
       made: "Anthropic",
     },
   ];
