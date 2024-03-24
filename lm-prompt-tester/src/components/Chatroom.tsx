@@ -47,16 +47,11 @@ export default function Chatroom({ onClose }: ChatroomProps): JSX.Element {
         <div className={styles.closeChatroomButton} onClick={onClose}>
           ✕
         </div>
-        <div>Query</div>
-        <div className={styles.inputContainer}>
-          <input className={styles.inputBox}></input>
-          <button className={styles.inputButton}>Send</button>
-        </div>
         <div>
           Model: {model.label},&nbsp;&nbsp; {model.made}{" "}
         </div>
         <div>
-          <select onChange={onChangeModel}>
+          <select className={styles.selectBox} onChange={onChangeModel}>
             {modelList.map((model) => (
               <option value={model.value} key={model.value}>
                 {model.label}
@@ -64,6 +59,10 @@ export default function Chatroom({ onClose }: ChatroomProps): JSX.Element {
             ))}
           </select>
           <div>{parameterList}</div>
+        </div>
+        <div className={styles.inputContainer}>
+          <textarea className={styles.inputBox}></textarea>
+          <button className={styles.inputButton}>Send</button>
         </div>
       </div>
     </>

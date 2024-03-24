@@ -1,0 +1,28 @@
+.parameter {
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.inputTextBox {
+  margin: 5px;
+  border-radius: 5px;
+  padding: 8px;
+  border: none;
+  font-size: 14px;
+}
+
+.inputNumberBox {
+  margin: 5px;
+  border-radius: 5px;
+  padding: 8px;
+  border: none;
+  font-size: 14px;
+}
+
+.inputRangeBox {
+  margin: 5px;
+  border-radius: 5px;
+  accent-color: #ffffff;
+}
