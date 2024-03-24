@@ -25,5 +25,4 @@ def history_anthropic_create(params: AnthropicHistory, db: Session = Depends(get
 @router.get("/", tags=tags)
 def all_history_get(db: Session = Depends(get_db)):
     all_history = get_all_history(db)
-    print(all_history)
     return all_history
