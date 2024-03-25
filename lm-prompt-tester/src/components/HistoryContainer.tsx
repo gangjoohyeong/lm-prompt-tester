@@ -7,7 +7,7 @@ import axios from "axios";
 const apiIp = import.meta.env.VITE_API_IP;
 const apiPort = import.meta.env.VITE_API_PORT;
 
-interface Message {
+interface History {
   id: number;
   user_message: string;
   system_message: string;
@@ -17,60 +17,60 @@ interface Message {
 }
 
 export default function HistoryContainer() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [histories, setHistories] = useState<History[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const messagesPerPage = 3;
+  const historiesPerPage = 10;
 
   useEffect(() => {
-    async function fetchMessages() {
+    async function fetchHistories() {
       try {
         const response = await axios.get(`http://${apiIp}:${apiPort}/history`);
-        setMessages(response.data);
+        setHistories(response.data);
       } catch (error) {
-        console.error("Error fetching messages:", error);
+        console.error("Error fetching histories:", error);
       }
     }
-    fetchMessages();
-  }, []); // Empty dependency array ensures this effect runs only once on component mount
+    fetchHistories();
+  }, []);
 
-  // Get current messages
-  const indexOfLastMessage = currentPage * messagesPerPage;
-  const indexOfFirstMessage = indexOfLastMessage - messagesPerPage;
-  const currentMessages = messages.slice(
-    indexOfFirstMessage,
-    indexOfLastMessage
+  const indexOfLastHistory = currentPage * historiesPerPage;
+  const indexOfFirstHistory = indexOfLastHistory - historiesPerPage;
+  const currentHistories = histories.slice(
+    indexOfFirstHistory,
+    indexOfLastHistory
   );
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
-    <div className={styles.messageList}>
-      <table className={styles.messageTable}>
-        <thead>
-          <tr>
-            <th>User Message</th>
-            <th>System Message</th>
-            <th>Answer</th>
-            <th>Model</th>
-            <th>Create Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentMessages.map((message) => (
-            <tr key={message.id}>
-              <td>{message.user_message}</td>
-              <td>{message.system_message}</td>
-              <td>{message.answer}</td>
-              <td>{message.model}</td>
-              <td>{new Date(message.create_date).toLocaleString()}</td>
+    <>
+      <div className={styles.HistoryContainer}>
+        <table className={styles.historyTable}>
+          <thead>
+            <tr>
+              <th>User Message</th>
+              <th>System Message</th>
+              <th>Answer</th>
+              <th>Model</th>
+              <th>Create Date</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      {/* Pagination */}
+          </thead>
+          <tbody>
+            {currentHistories.map((history) => (
+              <tr key={history.id}>
+                <td>{history.user_message}</td>
+                <td>{history.system_message}</td>
+                <td>{history.answer}</td>
+                <td>{history.model}</td>
+                <td>{new Date(history.create_date).toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <div className={styles.pagination}>
         {Array.from(
-          { length: Math.ceil(messages.length / messagesPerPage) },
+          { length: Math.ceil(histories.length / historiesPerPage) },
           (_, index) => (
             <button
               key={index}
@@ -82,6 +82,6 @@ export default function HistoryContainer() {
           )
         )}
       </div>
-    </div>
+    </>
   );
 }
