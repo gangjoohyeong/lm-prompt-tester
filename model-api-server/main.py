@@ -12,10 +12,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
-async def hello():
-    return {"Hello": "World"}
-
 app.include_router(api_key.router)
 app.include_router(openai.router)
 app.include_router(anthropic.router)
