@@ -35,6 +35,7 @@ export default function Chatroom({ onClose }: ChatroomProps): JSX.Element {
   const onClickSend = (): void => {
     setSendButtonDisabled(true);
     setUserMessageBoxDisabled(true);
+    setViewAnswerContainer(false);
     async function parameterSetting() {
       const updatedParameter = {
         ...parameter,
@@ -71,7 +72,9 @@ export default function Chatroom({ onClose }: ChatroomProps): JSX.Element {
             output_tokens: model_response.data.usage.output_tokens,
           };
         }
-        const requestParameter = { ...updatedParameter, ...addedParameter };
+        const requestParameter: {
+          [key: string]: string | number;
+        } = { ...updatedParameter, ...addedParameter };
         try {
           await axios.post(
             model.made === "OpenAI"
@@ -84,6 +87,11 @@ export default function Chatroom({ onClose }: ChatroomProps): JSX.Element {
         } catch (error) {
           console.error("Error posting history:", error);
         }
+        setUserMessageAndAnswer({
+          userMessage: userMessage,
+          answer: requestParameter.answer as string,
+        });
+        setViewAnswerContainer(true);
       } catch (error) {
         console.error("Error fetching model response:", error);
       } finally {
@@ -112,6 +120,14 @@ export default function Chatroom({ onClose }: ChatroomProps): JSX.Element {
   const [userMessageBoxDisabled, setUserMessageBoxDisabled] =
     useState<boolean>(false);
   const [sendButtonDisabled, setSendButtonDisabled] = useState<boolean>(false);
+
+  const [userMessageAndAnswer, setUserMessageAndAnswer] = useState<{
+    userMessage: string;
+    answer: string;
+  }>({ userMessage: "", answer: "" });
+
+  const [viewAnswerContainer, setViewAnswerContainer] =
+    useState<boolean>(false);
 
   const onSetParameter = (key: string, value: unknown): void => {
     setParameter((prevParameter) => ({
@@ -150,40 +166,50 @@ export default function Chatroom({ onClose }: ChatroomProps): JSX.Element {
 
   return (
     <>
-      <div className={styles.container}>
-        <div className={styles.closeChatroomButton} onClick={onClose}>
-          ✕
+      <div className={styles.parentContainer}>
+        <div className={styles.container}>
+          <div className={styles.closeChatroomButton} onClick={onClose}>
+            ✕
+          </div>
+          <div>
+            Model: {model.label},&nbsp;&nbsp; {model.made}{" "}
+          </div>
+          <div>
+            <select className={styles.selectBox} onChange={onChangeModel}>
+              {modelList.map((model) => (
+                <option value={model.value} key={model.value}>
+                  {model.label}
+                </option>
+              ))}
+            </select>
+            <div>{parameterList}</div>
+          </div>
+          <div className={styles.inputContainer}>
+            <textarea
+              className={styles.inputBox}
+              value={userMessage}
+              onChange={onChangeUserMessage}
+              disabled={userMessageBoxDisabled}
+              onKeyDown={userMessageBoxOnKeyDown}
+              placeholder="Type your message here..."
+            ></textarea>
+            <button
+              className={styles.inputButton}
+              onClick={onClickSend}
+              disabled={sendButtonDisabled}
+            >
+              Send
+            </button>
+          </div>
         </div>
-        <div>
-          Model: {model.label},&nbsp;&nbsp; {model.made}{" "}
-        </div>
-        <div>
-          <select className={styles.selectBox} onChange={onChangeModel}>
-            {modelList.map((model) => (
-              <option value={model.value} key={model.value}>
-                {model.label}
-              </option>
-            ))}
-          </select>
-          <div>{parameterList}</div>
-        </div>
-        <div className={styles.inputContainer}>
-          <textarea
-            className={styles.inputBox}
-            value={userMessage}
-            onChange={onChangeUserMessage}
-            disabled={userMessageBoxDisabled}
-            onKeyDown={userMessageBoxOnKeyDown}
-            placeholder="Type your message here..."
-          ></textarea>
-          <button
-            className={styles.inputButton}
-            onClick={onClickSend}
-            disabled={sendButtonDisabled}
-          >
-            Send
-          </button>
-        </div>
+        {viewAnswerContainer ? (
+          <div className={styles.answerContainer}>
+            <h4>User message</h4>
+            <div>{userMessageAndAnswer.userMessage}</div>
+            <h4>Response</h4>
+            <div>{userMessageAndAnswer.answer}</div>
+          </div>
+        ) : null}
       </div>
     </>
   );
