@@ -1,0 +1,28 @@
+.inputContainer {
+  display: flex;
+  justify-content: flex-end;
+  /* margin-left: auto; */
+  align-items: center;
+  margin: 15px 2px;
+}
+
+.inputBox:disabled {
+  background-color: #e2e2e2;
+}
+
+.inputButton {
+  background-color: white;
+  color: black;
+  border-radius: 3px;
+  padding: 3px 10px;
+  border: none;
+  border-color: rgb(255, 255, 255);
+  cursor: pointer;
+  font-size: 17px;
+  margin: 0 7px;
+  width: 30px;
+}
+
+.inputButton:hover {
+  background-color: #e2e2e2;
+}
