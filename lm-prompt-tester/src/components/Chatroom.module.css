@@ -28,6 +28,11 @@
   resize: none;
 }
 
+.inputBox:disabled {
+  background-color: #a0a0a0;
+  cursor: not-allowed;
+}
+
 .inputButton {
   background-color: white;
   color: black;
@@ -41,6 +46,11 @@
 
 .inputButton:hover {
   background-color: #e2e2e2;
+}
+
+.inputButton:disabled {
+  background-color: #a0a0a0;
+  cursor: not-allowed;
 }
 
 .selectBox {

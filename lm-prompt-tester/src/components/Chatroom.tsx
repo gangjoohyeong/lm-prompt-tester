@@ -1,5 +1,5 @@
 import styles from "./Chatroom.module.css";
-import { useState } from "react";
+import React, { useState } from "react";
 import OpenAIParameter from "./OpenAIParameter";
 import AnthropicParameter from "./AnthropicParameter";
 import axios from "axios";
@@ -33,6 +33,8 @@ export default function Chatroom({ onClose }: ChatroomProps): JSX.Element {
   ];
 
   const onClickSend = (): void => {
+    setSendButtonDisabled(true);
+    setUserMessageBoxDisabled(true);
     async function parameterSetting() {
       const updatedParameter = {
         ...parameter,
@@ -42,41 +44,53 @@ export default function Chatroom({ onClose }: ChatroomProps): JSX.Element {
 
       await setParameter(updatedParameter);
 
-      const model_response = await axios.post(
-        model.made === "OpenAI"
-          ? `http://${apiIp}:${apiPort}/openai`
-          : model.made === "Anthropic"
-          ? `http://${apiIp}:${apiPort}/anthropic`
-          : "",
-        updatedParameter
-      );
-      let addedParameter = {};
-      if (model.made === "OpenAI") {
-        addedParameter = {
-          answer: model_response.data.choices[0].message.content,
-          response_model: model_response.data.model,
-          completion_tokens: model_response.data.usage.completion_tokens,
-          prompt_tokens: model_response.data.usage.prompt_tokens,
-          total_tokens: model_response.data.usage.total_tokens,
-        };
-      } else if (model.made === "Anthropic") {
-        addedParameter = {
-          answer: model_response.data.content[0].text,
-          model: model_response.data.model,
-          input_tokens: model_response.data.usage.input_tokens,
-          output_tokens: model_response.data.usage.output_tokens,
-        };
-      }
+      try {
+        const model_response = await axios.post(
+          model.made === "OpenAI"
+            ? `http://${apiIp}:${apiPort}/openai`
+            : model.made === "Anthropic"
+            ? `http://${apiIp}:${apiPort}/anthropic`
+            : "",
+          updatedParameter
+        );
 
-      const requestParameter = { ...updatedParameter, ...addedParameter };
-      await axios.post(
-        model.made === "OpenAI"
-          ? `http://${apiIp}:${apiPort}/history/openai-history`
-          : model.made === "Anthropic"
-          ? `http://${apiIp}:${apiPort}/history/anthropic-history`
-          : "",
-        requestParameter
-      );
+        let addedParameter = {};
+        if (model.made === "OpenAI") {
+          addedParameter = {
+            answer: model_response.data.choices[0].message.content,
+            response_model: model_response.data.model,
+            completion_tokens: model_response.data.usage.completion_tokens,
+            prompt_tokens: model_response.data.usage.prompt_tokens,
+            total_tokens: model_response.data.usage.total_tokens,
+          };
+        } else if (model.made === "Anthropic") {
+          addedParameter = {
+            answer: model_response.data.content[0].text,
+            model: model_response.data.model,
+            input_tokens: model_response.data.usage.input_tokens,
+            output_tokens: model_response.data.usage.output_tokens,
+          };
+        }
+        const requestParameter = { ...updatedParameter, ...addedParameter };
+        try {
+          await axios.post(
+            model.made === "OpenAI"
+              ? `http://${apiIp}:${apiPort}/history/openai-history`
+              : model.made === "Anthropic"
+              ? `http://${apiIp}:${apiPort}/history/anthropic-history`
+              : "",
+            requestParameter
+          );
+        } catch (error) {
+          console.error("Error posting history:", error);
+        }
+      } catch (error) {
+        console.error("Error fetching model response:", error);
+      } finally {
+        setSendButtonDisabled(false);
+        setUserMessageBoxDisabled(false);
+        setUserMessage("");
+      }
     }
     parameterSetting();
   };
@@ -95,6 +109,10 @@ export default function Chatroom({ onClose }: ChatroomProps): JSX.Element {
 
   const [parameter, setParameter] = useState<{ [key: string]: unknown }>({});
 
+  const [userMessageBoxDisabled, setUserMessageBoxDisabled] =
+    useState<boolean>(false);
+  const [sendButtonDisabled, setSendButtonDisabled] = useState<boolean>(false);
+
   const onSetParameter = (key: string, value: unknown): void => {
     setParameter((prevParameter) => ({
       ...prevParameter,
@@ -112,6 +130,15 @@ export default function Chatroom({ onClose }: ChatroomProps): JSX.Element {
     e: React.ChangeEvent<HTMLTextAreaElement>
   ): void => {
     setUserMessage(e.target.value);
+  };
+
+  const userMessageBoxOnKeyDown = (
+    event: React.KeyboardEvent<HTMLTextAreaElement>
+  ): void => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      onClickSend();
+    }
   };
 
   let parameterList;
@@ -143,9 +170,17 @@ export default function Chatroom({ onClose }: ChatroomProps): JSX.Element {
         <div className={styles.inputContainer}>
           <textarea
             className={styles.inputBox}
+            value={userMessage}
             onChange={onChangeUserMessage}
+            disabled={userMessageBoxDisabled}
+            onKeyDown={userMessageBoxOnKeyDown}
+            placeholder="Type your message here..."
           ></textarea>
-          <button className={styles.inputButton} onClick={onClickSend}>
+          <button
+            className={styles.inputButton}
+            onClick={onClickSend}
+            disabled={sendButtonDisabled}
+          >
             Send
           </button>
         </div>
