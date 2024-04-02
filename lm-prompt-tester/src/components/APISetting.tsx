@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "./APISetting.module.css";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 const apiIp = import.meta.env.VITE_API_IP;
 const apiPort = import.meta.env.VITE_API_PORT;
@@ -88,12 +89,17 @@ export default function APISetting({
           const requestData = {
             new_key: apiKey,
           };
-          const response = await axios.patch(
-            `http://${apiIp}:${apiPort}/api-keys/${ApiDbName}`,
-            requestData
-          );
-          setApiKey(response.data.key);
-          setIsEditing(false);
+          try {
+            const response = await axios.patch(
+              `http://${apiIp}:${apiPort}/api-keys/${ApiDbName}`,
+              requestData
+            );
+            setApiKey(response.data.key);
+            setIsEditing(false);
+            toast.success("API key updated successfully");
+          } catch (error) {
+            toast.error("Error updating API key");
+          }
         }
         // API가 이미 등록되어 있을 때
       } else {
@@ -103,7 +109,7 @@ export default function APISetting({
         }
       }
     } catch (error) {
-      console.error(error);
+      toast.error("Error updating API key");
     } finally {
       setIsLoading(false);
     }

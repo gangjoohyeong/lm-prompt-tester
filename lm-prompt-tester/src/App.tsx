@@ -7,6 +7,8 @@ import Setting from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // 1. "/": 홈페이지
 // 2. "/chat": 채팅
@@ -25,6 +27,18 @@ function App(): JSX.Element {
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
+
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        closeOnClick
+        rtl={false}
+        draggable
+        pauseOnHover
+        theme="dark"
+        limit={1}
+      />
     </div>
   );
 }

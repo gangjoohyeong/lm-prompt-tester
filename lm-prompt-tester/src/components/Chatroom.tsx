@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import OpenAIParameter from "./OpenAIParameter";
 import AnthropicParameter from "./AnthropicParameter";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 interface ChatroomProps {
   onClose: () => void;
@@ -33,6 +34,11 @@ export default function Chatroom({ onClose }: ChatroomProps): JSX.Element {
   ];
 
   const onClickSend = (): void => {
+    if (userMessage === "") {
+      toast.error("Please type your message");
+      return;
+    }
+
     setSendButtonDisabled(true);
     setUserMessageBoxDisabled(true);
     setViewAnswerContainer(false);
@@ -93,7 +99,13 @@ export default function Chatroom({ onClose }: ChatroomProps): JSX.Element {
         });
         setViewAnswerContainer(true);
       } catch (error) {
-        console.error("Error fetching model response:", error);
+        if (axios.isAxiosError(error) && error.response) {
+          if (error.response.status == 404) {
+            toast.error("API Key is not set");
+          } else {
+            toast.error("Error occurred while sending message");
+          }
+        }
       } finally {
         setSendButtonDisabled(false);
         setUserMessageBoxDisabled(false);
