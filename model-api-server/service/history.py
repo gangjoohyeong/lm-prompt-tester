@@ -44,3 +44,20 @@ def create_anthropic_history(db: Session, params: AnthropicHistory):
 
 def get_all_history(db: Session):
     return db.query(History).all()
+
+def search_history(db: Session, start: int, limit: int, start_date: datetime, end_date: datetime, order_by: str):
+    query = db.query(History)
+    if start_date:
+        query = query.filter(History.create_date >= start_date)
+    if end_date:
+        query = query.filter(History.create_date <= end_date)
+    if order_by:
+        if order_by == "asc":
+            query = query.order_by(History.create_date.asc())
+        else:
+            query = query.order_by(History.create_date.desc())
+    if start:
+        query = query.offset(start)
+    if limit:
+        query = query.limit(limit)
+    return query.all()
